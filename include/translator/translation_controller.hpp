@@ -4,51 +4,40 @@
 
 #include <QObject>
 #include <QString>
+#include <QUrl>
 
 class TranslationController final : public QObject {
     Q_OBJECT
     QML_ELEMENT
 
-    Q_PROPERTY(QString inputText READ inputText WRITE setInputText NOTIFY inputTextChanged)
-    Q_PROPERTY(QString translatedText READ translatedText NOTIFY translatedTextChanged)
-    Q_PROPERTY(QString sourceLanguage READ sourceLanguage WRITE setSourceLanguage NOTIFY
-                   sourceLanguageChanged)
     Q_PROPERTY(QString targetLanguage READ targetLanguage WRITE setTargetLanguage NOTIFY
                    targetLanguageChanged)
     Q_PROPERTY(QString status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QUrl pageUrl READ pageUrl NOTIFY pageUrlChanged)
+    Q_PROPERTY(bool canTranslate READ canTranslate NOTIFY pageUrlChanged)
 
-   public:
+public:
     explicit TranslationController(QObject* parent = nullptr);
-
-    [[nodiscard]] auto inputText() const -> QString;
-    void setInputText(const QString& inputText);
-
-    [[nodiscard]] auto translatedText() const -> QString;
-
-    [[nodiscard]] auto sourceLanguage() const -> QString;
-    void setSourceLanguage(const QString& sourceLanguage);
 
     [[nodiscard]] auto targetLanguage() const -> QString;
     void setTargetLanguage(const QString& targetLanguage);
 
     [[nodiscard]] auto status() const -> QString;
+    [[nodiscard]] auto pageUrl() const -> QUrl;
+    [[nodiscard]] auto canTranslate() const -> bool;
 
-    Q_INVOKABLE void translate();
+    Q_INVOKABLE void openPage(const QUrl& pageUrl);
+    Q_INVOKABLE void translatePage();
 
-   signals:
-    void inputTextChanged();
-    void translatedTextChanged();
-    void sourceLanguageChanged();
+signals:
     void targetLanguageChanged();
     void statusChanged();
+    void pageUrlChanged();
 
-   private:
-    void setTranslatedText(const QString& translatedText);
+private:
     void setStatus(const QString& status);
 
-    QString inputText_;
-    QString translatedText_;
-    QString sourceLanguage_{"English"};
     QString targetLanguage_{"Indonesian"};
-    QString status_{"Ready"};
+    QString status_{"Import a manga page to begin."};
+    QUrl pageUrl_;
 };

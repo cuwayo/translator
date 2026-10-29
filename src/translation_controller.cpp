@@ -1,32 +1,6 @@
 #include "translator/translation_controller.hpp"
 
-#include "translator/translator.hpp"
-
 TranslationController::TranslationController(QObject* parent) : QObject(parent) {}
-
-auto TranslationController::inputText() const -> QString { return inputText_; }
-
-void TranslationController::setInputText(const QString& inputText) {
-    if (inputText_ == inputText) {
-        return;
-    }
-
-    inputText_ = inputText;
-    emit inputTextChanged();
-}
-
-auto TranslationController::translatedText() const -> QString { return translatedText_; }
-
-auto TranslationController::sourceLanguage() const -> QString { return sourceLanguage_; }
-
-void TranslationController::setSourceLanguage(const QString& sourceLanguage) {
-    if (sourceLanguage_ == sourceLanguage) {
-        return;
-    }
-
-    sourceLanguage_ = sourceLanguage;
-    emit sourceLanguageChanged();
-}
 
 auto TranslationController::targetLanguage() const -> QString { return targetLanguage_; }
 
@@ -41,24 +15,28 @@ void TranslationController::setTargetLanguage(const QString& targetLanguage) {
 
 auto TranslationController::status() const -> QString { return status_; }
 
-void TranslationController::translate() {
-    if (inputText_.trimmed().isEmpty()) {
-        setTranslatedText({});
-        setStatus("Enter text to translate.");
+auto TranslationController::pageUrl() const -> QUrl { return pageUrl_; }
+
+auto TranslationController::canTranslate() const -> bool { return !pageUrl_.isEmpty(); }
+
+void TranslationController::openPage(const QUrl& pageUrl) {
+    if (!pageUrl.isValid() || !pageUrl.isLocalFile()) {
+        setStatus("Choose a local PNG, JPEG, or WebP manga page.");
         return;
     }
 
-    setTranslatedText(QString::fromStdString(translator::translate(inputText_.toStdString())));
-    setStatus("Translation provider not configured; showing the source text.");
+    pageUrl_ = pageUrl;
+    emit pageUrlChanged();
+    setStatus("Page imported. Choose the output language, then detect text.");
 }
 
-void TranslationController::setTranslatedText(const QString& translatedText) {
-    if (translatedText_ == translatedText) {
+void TranslationController::translatePage() {
+    if (!canTranslate()) {
+        setStatus("Import a manga page before starting translation.");
         return;
     }
 
-    translatedText_ = translatedText;
-    emit translatedTextChanged();
+    setStatus("OCR and translation providers are not configured yet.");
 }
 
 void TranslationController::setStatus(const QString& status) {

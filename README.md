@@ -1,10 +1,12 @@
-# Translator
+# Manga Translator
 
-A modern C++23 desktop application for text translation, built with Qt Quick.
+A modern C++23 desktop application for translating manga pages, built with Qt
+Quick.
 
-The interface supports selecting languages and entering source text. The current
-translation backend deliberately preserves source text until a translation provider
-is selected and configured.
+The application workflow is: import an image, detect text and speech bubbles,
+translate the detected text, review it in context, then export a translated page.
+The current implementation includes the image-import UI and provider boundary;
+OCR, translation, and image-rendering providers still need to be chosen.
 
 ## Requirements
 
@@ -39,12 +41,13 @@ Run the application:
 ## Architecture
 
 - `src/translator.cpp` — framework-independent translation engine seam.
-- `src/translation_controller.cpp` — C++ state and actions exposed to QML.
-- `qml/Main.qml` — the desktop interface.
+- `src/translation_controller.cpp` — C++ page-import state and pipeline actions
+  exposed to QML.
+- `qml/Main.qml` — image import, preview, language selection, and workflow UI.
 
 Translation logic stays in C++; QML is responsible only for presentation and
-interaction. The controller is registered as a QML type using Qt's modern CMake
-integration.
+interaction. OCR, bubble detection, machine translation, and image rendering
+will be separate provider implementations behind the C++ pipeline.
 
 ## License
 
