@@ -1,0 +1,17 @@
+# Build products
+/build/
+/out/
+/cmake-build-*/
+
+# CMake
+/CMakeCache.txt
+/CMakeFiles/
+/compile_commands.json
+/CTestTestfile.cmake
+/Testing/
+
+# Editors and operating systems
+/.idea/
+/.vscode/
+.DS_Store
+*~
