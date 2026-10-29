@@ -68,6 +68,10 @@ if(TRANSLATOR_BUILD_UI)
             translator::lib
             Qt6::Quick
     )
+    target_include_directories(translator
+        PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/include/translator"
+    )
 
     set_target_properties(translator PROPERTIES
         MACOSX_BUNDLE TRUE

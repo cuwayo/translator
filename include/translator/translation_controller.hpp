@@ -6,7 +6,7 @@
 #include <QString>
 #include <QUrl>
 
-class TranslationController final : public QObject {
+class TranslationController : public QObject {
     Q_OBJECT
     QML_ELEMENT
 
